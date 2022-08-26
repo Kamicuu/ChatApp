@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace ChatApp.Services
 {
@@ -30,6 +29,7 @@ namespace ChatApp.Services
                 if (repository.FirstOrDefault(chatRoom => chatRoom.ChatRoomName.Equals(data.ChatRoomName)) != null)
                 {
                     httpStatusCode = HttpStatusCode.Conflict;
+
                     return new DirectiveDTO(Commands.CHAT_EXISTS, $"Chat with name {data.ChatRoomName} alredy exists!");
                 }
 
@@ -40,11 +40,13 @@ namespace ChatApp.Services
                 repository.Add(chat);
 
                 httpStatusCode = HttpStatusCode.Created;
+
                 return new DirectiveDTO(Commands.CHAT_CREATED, $"Chat with name {data.ChatRoomName} was created!");
             }
             catch (Exception ex)
             {
                 httpStatusCode = HttpStatusCode.InternalServerError;
+
                 return new DirectiveDTO(Commands.UNKNOW_INTERNAL_ERROR, $"Unknow error!");
             }
             
@@ -72,6 +74,7 @@ namespace ChatApp.Services
             catch (Exception)
             {
                 statusCode = HttpStatusCode.InternalServerError;
+
                 return new List<ChatRoomDTO>();
             }
         }

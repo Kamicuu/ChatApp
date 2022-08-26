@@ -3,8 +3,6 @@ using ChatApp.Models.DTOs;
 using ChatApp.Services;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChatApp.Hubs
@@ -16,24 +14,41 @@ namespace ChatApp.Hubs
         {
             chatService = service;
         }
+
         /// <summary>
-        /// Connects user to chat if user is assgned to chat, esle sends information that user is not assigned to chat.
+        /// Connects user to chat
         /// </summary>
         /// <param name="chatUser"></param>
         /// <returns></returns>
         public async Task ConnectToChat(ChatUserDTO chatUser)
         {
             var resp = await chatService.FindRoomForUserAsync(chatUser, Context.ConnectionId);
-
             await Clients.Caller.SendAsync(SignalMethods.RECIVE_DIRECTIVE, resp);
         }
+
+        /// <summary>
+        /// Sends standard message to chat
+        /// </summary>
+        /// <param name="chatUser"></param>
+        /// <returns></returns>
         public async Task SendMessage(ChatMessageDTO chatUser) 
         {
             var resp = await chatService.SendMessageBySpecyficUser(chatUser, Context.ConnectionId);
-
             await Clients.Caller.SendAsync(SignalMethods.RECIVE_DIRECTIVE, resp);
         }
 
+        /// <summary>
+        /// Disconnects user from chat
+        /// </summary>
+        /// <param name="chatUser"></param>
+        /// <returns></returns>
+        public async Task DisconnectFromChat(ChatUserDTO chatUser)
+        {
+            var resp = await chatService.DisconnectUserFromChat(chatUser, Context.ConnectionId);
+            await Clients.Caller.SendAsync(SignalMethods.RECIVE_DIRECTIVE, resp);
+        }
+
+        //to do - implementation of real user status
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             await base.OnDisconnectedAsync(exception);

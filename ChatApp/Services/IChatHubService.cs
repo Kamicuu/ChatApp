@@ -12,6 +12,13 @@ namespace ChatApp.Services
         /// <param name="connectionId"></param>
         /// <returns></returns>
         public Task<DirectiveDTO> FindRoomForUserAsync(ChatUserDTO userDto, string connectionId);
+        /// <summary>
+        /// Send message to clients assigned to same chat as client with this connectionId.
+        /// </summary>
+        /// <param name="messageDto"></param>
+        /// <param name="connectionId"></param>
+        /// <returns></returns>
         public Task<DirectiveDTO> SendMessageBySpecyficUser(ChatMessageDTO messageDto, string connectionId);
+        public Task<DirectiveDTO> DisconnectUserFromChat(ChatUserDTO userDto, string connectionId);
     }
 }
