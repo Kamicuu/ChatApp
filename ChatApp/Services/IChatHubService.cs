@@ -1,4 +1,4 @@
-﻿using ChatApp.Models;
+﻿using ChatApp.Models.DTOs;
 using System.Threading.Tasks;
 
 namespace ChatApp.Services
@@ -12,5 +12,6 @@ namespace ChatApp.Services
         /// <param name="connectionId"></param>
         /// <returns></returns>
         public Task<DirectiveDTO> FindRoomForUserAsync(ChatUserDTO userDto, string connectionId);
+        public Task<DirectiveDTO> SendMessageBySpecyficUser(ChatMessageDTO messageDto, string connectionId);
     }
 }

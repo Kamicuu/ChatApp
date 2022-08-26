@@ -7,6 +7,8 @@ namespace ChatApp.Constants
 {
     public static class SignalMethods
     {
-        public const string SEND_JOIN_MESSAGE = "SendJoinMessage";
+        public const string RECIVE_DIRECTIVE = "ReciveDirective";
+        public const string RECIVE_JOIN_MESSAGE = "ReciveJoinMessage";
+        public const string RECIVE_MESSAGE = "ReciveMessage";
     }
 }

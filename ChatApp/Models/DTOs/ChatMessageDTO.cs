@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace ChatApp.Models.DTOs
 {
-    public class ChatUserDTO : ChatUser
+    public class ChatMessageDTO : ChatMessage
     {
-        public string ChatRoomName { get; set; }
+        public string UserName { get; set; }
     }
 }

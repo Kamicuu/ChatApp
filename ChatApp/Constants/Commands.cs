@@ -7,10 +7,13 @@ namespace ChatApp.Constants
 {
     public static class Commands
     {
-        public static readonly string USER_JOINED_EXIST_CHAT = "UserJoinedToExistingChat";
-        public static readonly string USER_NOT_JOINED_TO_CHAT = "UserNotJoinedToChat";
-        public static readonly string CHAT_EXISTS = "ChatExists";
-        public static readonly string CHAT_CREATED = "ChatCreated";
-        public static readonly string UNKNOW_INTERNAL_ERROR = "UnknowInternalError";
+        public const string USER_JOINED_EXIST_CHAT = "UserJoinedToExistingChat";
+        public const string USER_JOINED_CHAT = "UserJoinedChat";
+        public const string USER_NOT_JOINED_TO_CHAT = "UserNotJoinedToChat";
+        public const string CHAT_EXISTS = "ChatExists";
+        public const string CHAT_CREATED = "ChatCreated";
+        public const string UNKNOW_INTERNAL_ERROR = "UnknowInternalError";
+        public const string MESSAGE_SEND = "MessageSend";
+        public const string MESSAGE_NOT_SEND = "MessageNotSend";
     }
 }
