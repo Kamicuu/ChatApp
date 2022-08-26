@@ -5,15 +5,11 @@ using System.Threading.Tasks;
 
 namespace ChatApp.Models
 {
-    internal class ChatRoom
+    public class ChatRoom
     {
-        public ChatRoom() 
-        {
-            ChatUsers = new List<ChatUser>();
-        }
-        internal string ChatRoomName { get; set; }
-        internal Guid ChatRoomId { get; set; }
-        internal IEnumerable<ChatUser> ChatUsers { get; }
-        internal string CreatedBy { get; set; }
+        public string ChatRoomName { get; set; }
+        public Guid ChatRoomId { get; set; }
+        public IEnumerable<ChatUser> ChatUsers { get; } = new List<ChatUser>();
+        public string CreatedBy { get; set; }
     }
 }

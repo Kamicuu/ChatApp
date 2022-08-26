@@ -11,5 +11,6 @@ namespace ChatApp.Constants
         public static readonly string USER_NOT_JOINED_TO_CHAT = "UserNotJoinedToChat";
         public static readonly string CHAT_EXISTS = "ChatExists";
         public static readonly string CHAT_CREATED = "ChatCreated";
+        public static readonly string UNKNOW_INTERNAL_ERROR = "UnknowInternalError";
     }
 }

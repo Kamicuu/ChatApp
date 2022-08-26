@@ -7,7 +7,7 @@ namespace ChatApp.Models
 {
     internal sealed class Database
     {
-        private IEnumerable<ChatRoom> _chatRooms { get; set; }
+        private IEnumerable<ChatRoom> _chatRooms;
         internal IEnumerable<ChatRoom> ChatRooms { get { return _chatRooms; } }
 
         private static Database instance = null;

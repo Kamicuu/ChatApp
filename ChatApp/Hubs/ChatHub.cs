@@ -11,15 +11,15 @@ namespace ChatApp.Hubs
 {
     public class ChatHub : Hub
     {
-        private IChatHubService _chatService;
+        private IChatHubService chatService;
         public ChatHub(IChatHubService service)
         {
-            _chatService = service;
+            chatService = service;
         }
 
         public async Task ConnectToChat(ChatUserDTO chatUser)
         {
-            var resp = await _chatService.FindRoomForUserAsync(chatUser, Context.ConnectionId);
+            var resp = await chatService.FindRoomForUserAsync(chatUser, Context.ConnectionId);
 
             await Clients.Caller.SendAsync(SignalMethods.SEND_JOIN_MESSAGE, resp);
         }

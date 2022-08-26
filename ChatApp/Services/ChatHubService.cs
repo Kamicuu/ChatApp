@@ -11,14 +11,14 @@ namespace ChatApp.Services
 {
     public class ChatHubService : IChatHubService
     {
-        private readonly IHubContext<ChatHub> _hubContext;
+        private readonly IHubContext<ChatHub> hubContext;
 
         //Example - database like data source
-        private IEnumerable<ChatRoom> chatRooms = Database.Instance.ChatRooms;
+        private IEnumerable<ChatRoom> repository = Database.Instance.ChatRooms;
 
-        public ChatHubService(IHubContext<ChatHub> hubContext)
+        public ChatHubService(IHubContext<ChatHub> context)
         {
-            _hubContext = hubContext;
+            hubContext = context;
         }
 
         public async Task<DirectiveDTO> FindRoomForUserAsync(ChatUserDTO userDto, string connectionId)
@@ -26,13 +26,13 @@ namespace ChatApp.Services
             try
             {
                 
-                var chatRoom = chatRooms.SingleOrDefault(
+                var chatRoom = repository.SingleOrDefault(
                     room => room.ChatUsers.FirstOrDefault(
                         user => user.UserName.Equals(userDto.UserName)) != null);
 
                 if (chatRoom != null)
                 {
-                    await _hubContext.Groups.AddToGroupAsync(connectionId, chatRoom.ChatRoomName);
+                    await hubContext.Groups.AddToGroupAsync(connectionId, chatRoom.ChatRoomName);
                     return new DirectiveDTO(Commands.USER_JOINED_EXIST_CHAT, "User joined to existing group.");
                 }
             }

@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using System;
+using System.Net;
 
 namespace ChatApp
 {
@@ -34,8 +35,9 @@ namespace ChatApp
                         .AllowAnyMethod();
                 });
             });
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IChatHubService, ChatHubService>();
-            services.AddScoped<IChatControllerService, ChatControllerService>();
+            services.AddScoped<IChatControllerService<HttpStatusCode>, ChatControllerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -17,16 +17,16 @@ namespace ChatApp.Controllers
     [Produces(MediaTypeNames.Application.Json)]
     public class ChatController : ControllerBase
     {
-        private IChatControllerService _chatService;
-        public ChatController(IChatControllerService service)
+        private IChatControllerService<HttpStatusCode> chatService;
+        public ChatController(IChatControllerService<HttpStatusCode> service)
         {
-            _chatService = service;
+            chatService = service;
         }
 
-        [HttpPost("create-new-chat")]
+        [HttpPost("chat")]
         public IActionResult CreateNewChat(CreateNewChatDTO data)
         {
-            var result = _chatService.CreateNewChat(data, out HttpStatusCode statusCode);
+            var result = chatService.CreateNewChat(data, out HttpStatusCode statusCode);
 
             if (statusCode == HttpStatusCode.Conflict)
             {
@@ -34,6 +34,19 @@ namespace ChatApp.Controllers
             }
 
             return Created(Request.Path, result);
+        }
+
+        [HttpGet("chats")]
+        public IActionResult GetAllChats()
+        {
+            var result = chatService.GetAllChatsList(out HttpStatusCode statusCode);
+
+            if (statusCode == HttpStatusCode.NotFound)
+            {
+                return NotFound(result);
+            }
+
+            return Ok(result);
         }
 
     }
