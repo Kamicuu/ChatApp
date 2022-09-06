@@ -63,10 +63,13 @@ namespace ChatApp.Services
                 if (chatRoom != null)
                 {
                     //ConnectionId is needed for sending message and validate if user use proper connection.
-                    chatRoom.ChatUsers.First(user => user.UserName.Equals(userDto.UserName)).ConnectionID = connectionId;
+                    var chatUser = chatRoom.ChatUsers.First(user => user.UserName.Equals(userDto.UserName));
+
+                    await hubContext.Groups.RemoveFromGroupAsync(chatUser.ConnectionID, chatRoom.ChatRoomName);
+                    chatUser.ConnectionID = connectionId;
                     await hubContext.Groups.AddToGroupAsync(connectionId, chatRoom.ChatRoomName);
 
-                    return new DirectiveDTO(Commands.USER_JOINED_EXIST_CHAT, $"User reconnected to chat: {chatRoom.ChatRoomName}");
+                    return new DirectiveDTO(Commands.USER_JOINED_EXIST_CHAT, chatRoom.ChatRoomName);
                 }
                 else if(!userDto.ChatRoomName.Equals(string.Empty))
                 {
@@ -79,7 +82,7 @@ namespace ChatApp.Services
                         chatUsers.Add(new ChatUser(userDto.UserName, connectionId));
                         await hubContext.Groups.AddToGroupAsync(connectionId, chat.ChatRoomName);
 
-                        return new DirectiveDTO(Commands.USER_JOINED_CHAT, "User joined to chat.");
+                        return new DirectiveDTO(Commands.USER_JOINED_CHAT, chat.ChatRoomName);
                     }
                     return new DirectiveDTO(Commands.USER_NOT_JOINED_TO_CHAT, $"Chat with name: {userDto.ChatRoomName} - not exists!");
                 }
@@ -131,7 +134,7 @@ namespace ChatApp.Services
         /// <param name="chatRooms"></param>
         /// <param name="userName"></param>
         /// <returns></returns>
-        private ChatRoom getChatRoomForUser(ref IEnumerable<ChatRoom> chatRooms, string userName)
+        private static ChatRoom getChatRoomForUser(ref IEnumerable<ChatRoom> chatRooms, string userName)
         {
             return chatRooms.SingleOrDefault(
                     room => room.ChatUsers.FirstOrDefault(

@@ -29,11 +29,11 @@ namespace ChatApp.Hubs
         /// <summary>
         /// Sends standard message to chat
         /// </summary>
-        /// <param name="chatUser"></param>
+        /// <param name="chatMessage"></param>
         /// <returns></returns>
-        public async Task SendMessage(ChatMessageDTO chatUser) 
+        public async Task SendMessage(ChatMessageDTO chatMessage) 
         {
-            var resp = await chatService.SendMessageBySpecyficUser(chatUser, Context.ConnectionId);
+            var resp = await chatService.SendMessageBySpecyficUser(chatMessage, Context.ConnectionId);
             await Clients.Caller.SendAsync(SignalMethods.RECIVE_DIRECTIVE, resp);
         }
 
