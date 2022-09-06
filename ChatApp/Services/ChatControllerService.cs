@@ -20,7 +20,7 @@ namespace ChatApp.Services
             this.mapper = mapper;
         }
 
-        public DirectiveDTO CreateNewChat(CreateNewChatDTO data, out HttpStatusCode httpStatusCode)
+        public DirectiveDTO<string> CreateNewChat(CreateNewChatDTO data, out HttpStatusCode httpStatusCode)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace ChatApp.Services
                 {
                     httpStatusCode = HttpStatusCode.Conflict;
 
-                    return new DirectiveDTO(Commands.CHAT_EXISTS, $"Chat with name {data.ChatRoomName} alredy exists!");
+                    return new DirectiveDTO<string>(Commands.CHAT_EXISTS, $"Chat with name {data.ChatRoomName} alredy exists!");
                 }
 
                 chat.ChatRoomName = data.ChatRoomName;
@@ -41,13 +41,13 @@ namespace ChatApp.Services
 
                 httpStatusCode = HttpStatusCode.Created;
 
-                return new DirectiveDTO(Commands.CHAT_CREATED, $"Chat with name {data.ChatRoomName} was created!");
+                return new DirectiveDTO<string>(Commands.CHAT_CREATED, $"Chat with name {data.ChatRoomName} was created!");
             }
             catch (Exception ex)
             {
                 httpStatusCode = HttpStatusCode.InternalServerError;
 
-                return new DirectiveDTO(Commands.UNKNOW_INTERNAL_ERROR, $"Unknow error!");
+                return new DirectiveDTO<string>(Commands.UNKNOW_INTERNAL_ERROR, $"Unknow error!");
             }
             
         }

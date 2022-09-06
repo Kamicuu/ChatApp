@@ -1,4 +1,5 @@
 ﻿using ChatApp.Models.DTOs;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ChatApp.Services
@@ -11,20 +12,27 @@ namespace ChatApp.Services
         /// <param name="userDto"></param>
         /// <param name="connectionId"></param>
         /// <returns></returns>
-        public Task<DirectiveDTO> FindRoomForUserAsync(ChatUserDTO userDto, string connectionId);
+        public Task<DirectiveDTO<string>> FindRoomForUserAsync(ChatUserDTO userDto, string connectionId);
         /// <summary>
         /// Send message to clients assigned to same chat as client with derivated connectionId.
         /// </summary>
         /// <param name="messageDto"></param>
         /// <param name="connectionId"></param>
         /// <returns></returns>
-        public Task<DirectiveDTO> SendMessageBySpecyficUser(ChatMessageDTO messageDto, string connectionId);
+        public Task<DirectiveDTO<string>> SendMessageBySpecyficUser(ChatMessageDTO messageDto, string connectionId);
         /// <summary>
         /// Disconected selected user form chat
         /// </summary>
         /// <param name="userDto"></param>
         /// <param name="connectionId"></param>
         /// <returns></returns>
-        public Task<DirectiveDTO> DisconnectUserFromChat(ChatUserDTO userDto, string connectionId);
+        public Task<DirectiveDTO<string>> DisconnectUserFromChat(ChatUserDTO userDto, string connectionId);
+        /// <summary>
+        /// Returns directive that contains lists of current assigned users to chat.
+        /// </summary>
+        /// <param name="chatName"></param>
+        /// <param name="connectionId"></param>
+        /// <returns></returns>
+        public Task<DirectiveDTO<List<string>>> GetCurrentUsersForChat(string chatName, string connectionId);
     }
 }

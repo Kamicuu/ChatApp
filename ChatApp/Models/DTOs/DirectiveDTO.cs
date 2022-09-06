@@ -1,15 +1,15 @@
 ﻿
 namespace ChatApp.Models.DTOs
 {
-    public class DirectiveDTO
+    public class DirectiveDTO<T>
     {
         public DirectiveDTO() { }
-        public DirectiveDTO(string command, string message)
+        public DirectiveDTO(string command, T message)
         {
             Command = command;
             Message = message;
         }
         public string Command { get; set; }
-        public string Message { get; set; }
+        public T Message { get; set; }
     }
 }

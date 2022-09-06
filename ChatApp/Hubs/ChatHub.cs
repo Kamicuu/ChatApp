@@ -53,5 +53,10 @@ namespace ChatApp.Hubs
         {
             await base.OnDisconnectedAsync(exception);
         }
+
+        public override Task OnConnectedAsync()
+        {
+            return base.OnConnectedAsync();
+        }
     }
 }

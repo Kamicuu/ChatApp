@@ -21,7 +21,7 @@ namespace ChatApp.Services
             hubContext = context;
         }
 
-        public async Task<DirectiveDTO> DisconnectUserFromChat(ChatUserDTO userDto, string connectionId)
+        public async Task<DirectiveDTO<string>> DisconnectUserFromChat(ChatUserDTO userDto, string connectionId)
         {
             try
             {
@@ -36,9 +36,9 @@ namespace ChatApp.Services
                         chatUsers.RemoveAll(user => user.UserName == userDto.UserName);
                         await hubContext.Groups.RemoveFromGroupAsync(connectionId, chatRoom.ChatRoomName);
 
-                        return new DirectiveDTO(Commands.USER_DISCONNECTED_CHAT, $"User {userDto.UserName} was disconnected from chat.");
+                        return new DirectiveDTO<string>(Commands.USER_DISCONNECTED_CHAT, $"User {userDto.UserName} was disconnected from chat.");
                     }
-                    else new DirectiveDTO(Commands.USER_NOT_DISCONNECTED_CHAT, $"User {userDto.UserName} was't disconnected. ConnectionId not related with this chat/user.");
+                    else new DirectiveDTO<string>(Commands.USER_NOT_DISCONNECTED_CHAT, $"User {userDto.UserName} was't disconnected. ConnectionId not related with this chat/user.");
                 }
 
             }
@@ -51,10 +51,10 @@ namespace ChatApp.Services
                 //other errors
             }
 
-            return new DirectiveDTO(Commands.USER_NOT_DISCONNECTED_CHAT, $"User {userDto.UserName} was't disconnected. User are not connected to any chat.");
+            return new DirectiveDTO<string>(Commands.USER_NOT_DISCONNECTED_CHAT, $"User {userDto.UserName} was't disconnected. User are not connected to any chat.");
         }
 
-        public async Task<DirectiveDTO> FindRoomForUserAsync(ChatUserDTO userDto, string connectionId)
+        public async Task<DirectiveDTO<string>> FindRoomForUserAsync(ChatUserDTO userDto, string connectionId)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace ChatApp.Services
                     chatUser.ConnectionID = connectionId;
                     await hubContext.Groups.AddToGroupAsync(connectionId, chatRoom.ChatRoomName);
 
-                    return new DirectiveDTO(Commands.USER_JOINED_EXIST_CHAT, chatRoom.ChatRoomName);
+                    return new DirectiveDTO<string>(Commands.USER_JOINED_EXIST_CHAT, chatRoom.ChatRoomName);
                 }
                 else if(!userDto.ChatRoomName.Equals(string.Empty))
                 {
@@ -82,9 +82,9 @@ namespace ChatApp.Services
                         chatUsers.Add(new ChatUser(userDto.UserName, connectionId));
                         await hubContext.Groups.AddToGroupAsync(connectionId, chat.ChatRoomName);
 
-                        return new DirectiveDTO(Commands.USER_JOINED_CHAT, chat.ChatRoomName);
+                        return new DirectiveDTO<string>(Commands.USER_JOINED_CHAT, chat.ChatRoomName);
                     }
-                    return new DirectiveDTO(Commands.USER_NOT_JOINED_TO_CHAT, $"Chat with name: {userDto.ChatRoomName} - not exists!");
+                    return new DirectiveDTO<string>(Commands.USER_NOT_JOINED_TO_CHAT, $"Chat with name: {userDto.ChatRoomName} - not exists!");
                 }
             }
             catch(InvalidOperationException ex)
@@ -96,10 +96,10 @@ namespace ChatApp.Services
                 //other errors
             }
 
-            return new DirectiveDTO(Commands.USER_NOT_JOINED_TO_CHAT, "User not joined to chat - not assigned to any chat or other error ocurs.");
+            return new DirectiveDTO<string>(Commands.USER_NOT_JOINED_TO_CHAT, "User not joined to chat - not assigned to any chat or other error ocurs.");
         }
 
-        public async Task<DirectiveDTO> SendMessageBySpecyficUser(ChatMessageDTO messageDto, string connectionId)
+        public async Task<DirectiveDTO<string>> SendMessageBySpecyficUser(ChatMessageDTO messageDto, string connectionId)
         {
             try
             {
@@ -111,9 +111,9 @@ namespace ChatApp.Services
                     {
                         await hubContext.Clients.Groups(chatRoom.ChatRoomName).SendAsync(SignalMethods.RECIVE_MESSAGE, messageDto);
 
-                        return new DirectiveDTO(Commands.MESSAGE_SEND, "Message send succesfully!");
+                        return new DirectiveDTO<string>(Commands.MESSAGE_SEND, "Message send succesfully!");
                     }
-                    else return new DirectiveDTO(Commands.MESSAGE_NOT_SEND, "The message was not sent! ConnectionId not related with this chat/user.");
+                    else return new DirectiveDTO<string>(Commands.MESSAGE_NOT_SEND, "The message was not sent! ConnectionId not related with this chat/user.");
                 }    
             }
             catch (InvalidOperationException ex)
@@ -125,7 +125,26 @@ namespace ChatApp.Services
                 //other errors
             }
 
-            return new DirectiveDTO(Commands.MESSAGE_NOT_SEND, "The message was not sent! You are not connected to this chat.");
+            return new DirectiveDTO<string>(Commands.MESSAGE_NOT_SEND, "The message was not sent! You are not connected to this chat.");
+        }
+
+        public async Task<DirectiveDTO<List<string>>> GetCurrentUsersForChat(string chatName, string connectionId)
+        {
+            try
+            {
+                var chatRoom = repository.FirstOrDefault((chat) => chat.ChatRoomName.Equals(chatName));
+                if (chatRoom != null)
+                {
+                    
+                    return new DirectiveDTO<List<string>>(Commands.USERS_FOUND, new List<string>() { "test" });
+                }
+            }
+            catch (Exception ex)
+            {
+
+                //other errors
+            }
+            return new DirectiveDTO<List<string>>(Commands.USERS_FOUND, new List<string>() { "test2" });
         }
 
         /// <summary>
@@ -153,5 +172,6 @@ namespace ChatApp.Services
         {
             return chatRoom.ChatUsers.First(user => user.UserName.Equals(userName)).ConnectionID.Equals(connectionId);
         }
+
     }
 }

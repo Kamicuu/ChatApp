@@ -16,7 +16,7 @@ namespace ChatApp.Services
         /// <param name="data"></param>
         /// <param name="httpStatusCode">Conflict - when chat exsits, Created - when chat created, Internal Error - when other exeption occurs</param>
         /// <returns></returns>
-        public DirectiveDTO CreateNewChat(CreateNewChatDTO data, out T statusCode);
+        public DirectiveDTO<string> CreateNewChat(CreateNewChatDTO data, out T statusCode);
         /// <summary>
         /// Returns all existing chats
         /// </summary>
