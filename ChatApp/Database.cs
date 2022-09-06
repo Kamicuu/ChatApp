@@ -1,6 +1,8 @@
 ﻿
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("ChatAppUnitTests")]
 namespace ChatApp.Models
 {
     internal sealed class Database
