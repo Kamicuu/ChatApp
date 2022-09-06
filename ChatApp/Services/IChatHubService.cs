@@ -28,11 +28,10 @@ namespace ChatApp.Services
         /// <returns></returns>
         public Task<DirectiveDTO<string>> DisconnectUserFromChat(ChatUserDTO userDto, string connectionId);
         /// <summary>
-        /// Returns directive that contains lists of current assigned users to chat.
+        /// Send list that contains current assigned users to chat, list is sended to all user of group. Group is determine by ChatRoomName in userDTO
         /// </summary>
-        /// <param name="chatName"></param>
-        /// <param name="connectionId"></param>
+        /// <param name="userDto"></param>
         /// <returns></returns>
-        public Task<DirectiveDTO<List<string>>> GetCurrentUsersForChat(string chatName, string connectionId);
+        public void SendUsersListToSpecyficUserGroup(ChatUserDTO userDto);
     }
 }

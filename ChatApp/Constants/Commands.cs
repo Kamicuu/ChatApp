@@ -13,7 +13,6 @@ namespace ChatApp.Constants
         public const string UNKNOW_INTERNAL_ERROR = "UnknowInternalError";
         public const string MESSAGE_SEND = "MessageSend";
         public const string MESSAGE_NOT_SEND = "MessageNotSend";
-        public const string USERS_FOUND = "ChatUsersFound";
-        public const string USERS_NOT_FOUND = "ChatUsersNotFound";
+        public const string USERS_UPDATE = "ChatUsersUpdate";
     }
 }

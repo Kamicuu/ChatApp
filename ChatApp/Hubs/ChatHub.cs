@@ -24,6 +24,7 @@ namespace ChatApp.Hubs
         {
             var resp = await chatService.FindRoomForUserAsync(chatUser, Context.ConnectionId);
             await Clients.Caller.SendAsync(SignalMethods.RECIVE_DIRECTIVE, resp);
+            chatService.SendUsersListToSpecyficUserGroup(chatUser);
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace ChatApp.Hubs
         /// </summary>
         /// <param name="chatMessage"></param>
         /// <returns></returns>
-        public async Task SendMessage(ChatMessageDTO chatMessage) 
+        public async Task SendMessage(ChatMessageDTO chatMessage)
         {
             var resp = await chatService.SendMessageBySpecyficUser(chatMessage, Context.ConnectionId);
             await Clients.Caller.SendAsync(SignalMethods.RECIVE_DIRECTIVE, resp);
@@ -46,17 +47,7 @@ namespace ChatApp.Hubs
         {
             var resp = await chatService.DisconnectUserFromChat(chatUser, Context.ConnectionId);
             await Clients.Caller.SendAsync(SignalMethods.RECIVE_DIRECTIVE, resp);
-        }
-
-        //to do - implementation of real user status
-        public override async Task OnDisconnectedAsync(Exception? exception)
-        {
-            await base.OnDisconnectedAsync(exception);
-        }
-
-        public override Task OnConnectedAsync()
-        {
-            return base.OnConnectedAsync();
+            chatService.SendUsersListToSpecyficUserGroup(chatUser);
         }
     }
 }

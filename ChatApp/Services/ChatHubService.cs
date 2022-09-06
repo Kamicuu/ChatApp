@@ -128,15 +128,28 @@ namespace ChatApp.Services
             return new DirectiveDTO<string>(Commands.MESSAGE_NOT_SEND, "The message was not sent! You are not connected to this chat.");
         }
 
-        public async Task<DirectiveDTO<List<string>>> GetCurrentUsersForChat(string chatName, string connectionId)
+        public async void SendUsersListToSpecyficUserGroup(ChatUserDTO userDto)
         {
             try
             {
-                var chatRoom = repository.FirstOrDefault((chat) => chat.ChatRoomName.Equals(chatName));
+                var userList = new List<string>();
+                ChatRoom chatRoom = null;
+
+                //if chatroomname empty we searching chat by username - propably reconnection
+                if (userDto.ChatRoomName == string.Empty) 
+                {
+                    chatRoom = getChatRoomForUser(ref repository, userDto.UserName);
+                }
+                else chatRoom = repository.FirstOrDefault((chat) => chat.ChatRoomName.Equals(userDto.ChatRoomName));
+
                 if (chatRoom != null)
                 {
-                    
-                    return new DirectiveDTO<List<string>>(Commands.USERS_FOUND, new List<string>() { "test" });
+                    foreach (var user in chatRoom.ChatUsers)
+                    {
+                        userList.Add(user.UserName);
+                    }
+
+                    await hubContext.Clients.Groups(chatRoom.ChatRoomName).SendAsync(SignalMethods.RECIVE_DIRECTIVE, new DirectiveDTO<List<string>>(Commands.USERS_UPDATE, userList));
                 }
             }
             catch (Exception ex)
@@ -144,7 +157,6 @@ namespace ChatApp.Services
 
                 //other errors
             }
-            return new DirectiveDTO<List<string>>(Commands.USERS_FOUND, new List<string>() { "test2" });
         }
 
         /// <summary>
@@ -158,7 +170,6 @@ namespace ChatApp.Services
             return chatRooms.SingleOrDefault(
                     room => room.ChatUsers.FirstOrDefault(
                         user => user.UserName.Equals(userName)) != null);
-
         }
 
         /// <summary>
