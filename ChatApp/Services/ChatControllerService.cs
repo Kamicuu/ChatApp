@@ -2,6 +2,7 @@
 using ChatApp.Constants;
 using ChatApp.Models;
 using ChatApp.Models.DTOs;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,12 @@ namespace ChatApp.Services
         //Example - database like data source
         private List<ChatRoom> repository = (List<ChatRoom>)Database.Instance.ChatRooms;
         private readonly IMapper mapper;
+        private readonly ILogger<ChatControllerService> logger;
 
-        public ChatControllerService(IMapper mapper)
+        public ChatControllerService(IMapper mapper, ILogger<ChatControllerService> logger)
         {
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         public DirectiveDTO<string> CreateNewChat(CreateNewChatDTO data, out HttpStatusCode httpStatusCode)
@@ -46,6 +49,7 @@ namespace ChatApp.Services
             catch (Exception ex)
             {
                 httpStatusCode = HttpStatusCode.InternalServerError;
+                logger.LogError("Unexpected error occurs!", ex);
 
                 return new DirectiveDTO<string>(Commands.UNKNOW_INTERNAL_ERROR, $"Unknow error!");
             }
@@ -71,9 +75,10 @@ namespace ChatApp.Services
             
                 return resultList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 statusCode = HttpStatusCode.InternalServerError;
+                logger.LogError("Unexpected error occurs!", ex);
 
                 return new List<ChatRoomDTO>();
             }

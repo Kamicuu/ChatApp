@@ -3,6 +3,7 @@ using ChatApp.Hubs;
 using ChatApp.Models;
 using ChatApp.Models.DTOs;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,14 @@ namespace ChatApp.Services
     public class ChatHubService : IChatHubService
     {
         private readonly IHubContext<ChatHub> hubContext;
+        private readonly ILogger<ChatHubService> logger;
         //Example - database like data source
         private IEnumerable<ChatRoom> repository = Database.Instance.ChatRooms;
 
-        public ChatHubService(IHubContext<ChatHub> context)
+        public ChatHubService(IHubContext<ChatHub> context, ILogger<ChatHubService> logger)
         {
             hubContext = context;
+            this.logger = logger;
         }
 
         public async Task<DirectiveDTO<string>> DisconnectUserFromChat(ChatUserDTO userDto, string connectionId)
@@ -45,10 +48,12 @@ namespace ChatApp.Services
             catch (InvalidOperationException ex)
             {
                 //same users multiple times on different chats - teoretically impossible
+                logger.LogError("Unexpected error occurs - same users multiple times on different chats!", ex);
             }
             catch (Exception ex)
             {
                 //other errors
+                logger.LogError("Unexpected error occurs!", ex);
             }
 
             return new DirectiveDTO<string>(Commands.USER_NOT_DISCONNECTED_CHAT, $"User {userDto.UserName} was't disconnected. User are not connected to any chat.");
@@ -90,10 +95,12 @@ namespace ChatApp.Services
             catch(InvalidOperationException ex)
             {
                 //username is used by another user
+                logger.LogError("Unexpected error occurs - same users multiple times on different chats!", ex);
             }
             catch (Exception ex)
             {
                 //other errors
+                logger.LogError("Unexpected error occurs!", ex);
             }
 
             return new DirectiveDTO<string>(Commands.USER_NOT_JOINED_TO_CHAT, "User not joined to chat - not assigned to any chat or other error ocurs.");
@@ -119,10 +126,12 @@ namespace ChatApp.Services
             catch (InvalidOperationException ex)
             {
                 //same users multiple times on different chats - teoretically impossible
+                logger.LogError("Unexpected error occurs - same users multiple times on different chats!", ex);
             }
             catch (Exception ex)
             {
                 //other errors
+                logger.LogError("Unexpected error occurs!", ex);
             }
 
             return new DirectiveDTO<string>(Commands.MESSAGE_NOT_SEND, "The message was not sent! You are not connected to this chat.");
@@ -156,6 +165,7 @@ namespace ChatApp.Services
             {
 
                 //other errors
+                logger.LogError("Unexpected error occurs!", ex);
             }
         }
 

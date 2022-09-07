@@ -2,12 +2,8 @@
 using ChatApp.Models.DTOs;
 using ChatApp.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mime;
-using System.Threading.Tasks;
 
 namespace ChatApp.Controllers
 {
@@ -32,6 +28,10 @@ namespace ChatApp.Controllers
             {
                 return Conflict(result);
             }
+            else if(statusCode == HttpStatusCode.InternalServerError)
+            {
+                return StatusCode(500, result);
+            }
 
             return Created(Request.Path, result);
         }
@@ -44,6 +44,10 @@ namespace ChatApp.Controllers
             if (statusCode == HttpStatusCode.NotFound)
             {
                 return NotFound(result);
+            }
+            else if (statusCode == HttpStatusCode.InternalServerError)
+            {
+                return StatusCode(500, result);
             }
 
             return Ok(result);
